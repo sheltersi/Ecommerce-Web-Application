@@ -14,10 +14,12 @@
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
 
     {{-- styles --}}
-<link rel="stylesheet" href="assets/css/bootstrap.min.css">
+<link rel="stylesheet" href="js/app.css">
+<link href="{{ asset('assets/css/bootstrap.min.css') }}" rel="stylesheet">
+{{-- <link href="{{ asset('css/app.css') }}" rel="stylesheet"> --}}
 
-    <!-- Scripts -->
-    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
+
+@livewireStyles
 </head>
 <body>
     <div id="app">
@@ -79,5 +81,18 @@
             @yield('content')
         </main>
     </div>
+
+   <!-- Scripts -->
+   {{-- @vite(['resources/sass/app.scss', 'js/app.js','assets/js/jquery/jquery-3.6.4.min.js', 
+   'assets/js/jquery/bootstrap.bundle.min.js']) --}}
+
+   <script src="{{asset('assets/jquery/jquery-3.6.4.min.js')}}"></script>
+   {{-- <script src="{{asset('js/app.js')}}"></script> --}}
+   <script src="{{asset('assets/js/bootstrap.bundle.min.js')}}"></script>
+
+
+
+   <script></script>
+ @livewireScripts
 </body>
 </html>
