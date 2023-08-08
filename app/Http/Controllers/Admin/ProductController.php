@@ -9,6 +9,9 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ProductFormRequest;
+use App\Models\ProductImage;
+use Illuminate\Support\Facades\File;
+
 
 class ProductController extends Controller
 {
@@ -32,7 +35,7 @@ class ProductController extends Controller
       $category = Category::findOrFail($validatedData['category_id']);
 
       $product = $category->products()->create([
-        'catagory_id'=>$validatedData['category_id'],
+        'category_id'=>$validatedData['category_id'],
         'name'=>$validatedData['name'],
         'slug'=>Str::slug($validatedData['slug']),
         'brand'=>$validatedData['brand'],
@@ -84,7 +87,7 @@ $product = Category::findOrFail($validatedData['category_id'])
 if($product)
 {
 $product->update([
-    'catagory_id'=>$validatedData['category_id'],
+    'category_id'=>$validatedData['category_id'],
     'name'=>$validatedData['name'],
     'slug'=>Str::slug($validatedData['slug']),
     'brand'=>$validatedData['brand'],
@@ -100,10 +103,39 @@ $product->update([
     'meta_description'=>$validatedData['meta_description'],
    
   ]);
-  
 
-}
+  if($request->hasFile('image')){
+    $uploadPath = 'uploads/products/';
+    
+    $i = 1;
+    foreach($request->file('image') as $imageFile){
+        $extention = $imageFile->getClientOriginalExtension();
+        $filename = time().$i++.'.'.$extention;
+        $imageFile->move($uploadPath,$filename);
+    $finalImagePathName = $uploadPath.$filename;
+    
+    $product->productImages()->create([
+        'product_id'=>$product->id,
+        'image'=>$finalImagePathName,
+    ]);
+    }
+          }
+         return redirect('/admin/products')->with('message','Product Updated Successfully');
+        }
 else{
     return redirect('admin/products')->with('message','No Such Product Id Found');
     }
+}
+
+public function destroyImage(int $product_image_id)
+{
+
+    $productImage = ProductImage::findOrFail($product_image_id);
+    if(File::exists($productImage->image)){
+        File::delete($productImage->image);
+    }
+    $productImage->delete();
+    return redirect()->back()->with('message','Product Image Deleted');
+}
+
 }

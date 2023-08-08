@@ -9,7 +9,7 @@
     <div class="card-header">
         <h3>
           Edit Product
-            <a href="{{ url('admin/products')}}" class="btn btn-danger btn-sm text-white float-end">
+            <a href="{{ url('admin/products/')}}" class="btn btn-danger btn-sm text-white float-end">
              BACK
             </a>
         </h3>
@@ -25,7 +25,7 @@
 @endif
 
 
-        <form action="{{url('admin/products'.$product->id)}}" method="POST" enctype="multipart/form-data">
+        <form action="{{ url('admin/products/'.$product->id) }}" method="POST" enctype="multipart/form-data">
 @csrf
 @method('PUT')
 
@@ -157,12 +157,18 @@
 
             <div>
                 @if($product->productImages)
+                <div class="row">
                 @foreach($product->productImages as $image)
+                <div class ="col-md-2">
                 <img src="{{ asset($image->image) }}" 
                 style="width:80px;height:80px;" 
                 class="me-4 border" alt="img" />
+                <a href="{{ url('admin/product-image/'.$image->id.'/delete') }}" class="d-block">Delete</a>
+            </div>
                 @endforeach
-             
+            </div>
+
+
                 @else
                 <h5>No Image Added</h5>
                 @endif
